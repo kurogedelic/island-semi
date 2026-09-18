@@ -16,146 +16,63 @@ main{width:min(520px,100%);margin:0 auto;padding:8px 8px calc(18px + env(safe-ar
 .module{border:1px solid #111;background:#fff;padding:8px;margin-bottom:8px}
 .title{height:28px;border-bottom:1px solid #111;display:flex;align-items:flex-start;justify-content:space-between;font-weight:700;letter-spacing:.06em;margin-bottom:7px}
 .chain{height:22px;display:flex;align-items:center;justify-content:center}
-.chain::before,.chain::after{content:"";height:1px;background:#111;flex:1}
-.chain span{padding:0 8px}
-.param{display:grid;grid-template-columns:74px 42px 1fr 42px;gap:5px;align-items:center;min-height:44px;border-bottom:1px solid #ddd;touch-action:pan-y}
-.param:last-of-type{border-bottom:0}
-.param output{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
-.step{min-height:34px;padding:0;font-weight:700}
+.chain::before,.chain::after{content:"";height:1px;background:#111;flex:1}.chain span{padding:0 8px}
+.param{display:grid;grid-template-columns:74px 42px 1fr 42px;gap:5px;align-items:center;min-height:44px;border-bottom:1px solid #ddd;touch-action:pan-y}.param:last-of-type{border-bottom:0}.param output{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}.step{min-height:34px;padding:0;font-weight:700}
 canvas{display:block;width:100%;height:82px;border:1px solid var(--line);margin-top:7px;background:#fff;touch-action:none}
-.phasebar{height:18px;border:1px solid #111;margin-top:7px;position:relative;overflow:hidden}
-.phasebar i{display:block;position:absolute;top:0;bottom:0;width:2px;background:#111;left:0}
-.matrix{display:grid;grid-template-columns:72px repeat(3,1fr);gap:4px;align-items:center}
-.mh{text-align:center;height:24px;display:flex;align-items:center;justify-content:center;white-space:nowrap}
-.cell{height:34px;min-height:34px;padding:0}
-.smallrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.smallrow .module{margin-bottom:8px}
-.jacks{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.jack{height:36px;border:1px solid #111;display:flex;align-items:center;justify-content:center;white-space:nowrap}
-.jack::before{content:"○";margin-right:6px}
+.phasebar{height:18px;border:1px solid #111;margin-top:7px;position:relative;overflow:hidden}.phasebar i{display:block;position:absolute;top:0;bottom:0;width:2px;background:#111;left:0}
+.matrix{display:grid;grid-template-columns:72px repeat(3,1fr);gap:4px;align-items:center}.mh{text-align:center;height:24px;display:flex;align-items:center;justify-content:center;white-space:nowrap}.cell{height:34px;min-height:34px;padding:0}
+.smallrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}.smallrow .module{margin-bottom:8px}
+.jacks{display:grid;grid-template-columns:1fr 1fr;gap:5px}.jack{height:36px;border:1px solid #111;display:flex;align-items:center;justify-content:center;white-space:nowrap}.jack::before{content:"○";margin-right:6px}
 @media(min-width:700px){main{width:min(820px,100%)}.core{display:grid;grid-template-columns:1fr 1fr;gap:8px}.core .module{margin-bottom:0}.chain{grid-column:1/-1}.smallrow{grid-template-columns:1fr 1fr}}
-</style>
-</head>
-<body>
-<main>
-  <header class="top"><span>ISLAND SEMI</span><button id="power">START</button></header>
-
-  <section class="core">
-    <div class="module">
-      <div class="title"><span>PHASE</span><span>φ</span></div>
-      <div class="param" data-id="freq"><span>FREQ</span><button class="step" data-dir="-1">←</button><output id="freqVal"></output><button class="step" data-dir="1">→</button></div>
-      <div class="param" data-id="reset"><span>RESET</span><button class="step" data-dir="-1">←</button><output id="resetVal"></output><button class="step" data-dir="1">→</button></div>
-      <div class="phasebar"><i id="phaseCursor"></i></div>
-      <canvas id="phaseScope"></canvas>
-    </div>
-
-    <div class="chain"><span>PHASE → MATERIALIZER</span></div>
-
-    <div class="module">
-      <div class="title"><span>MATERIALIZER</span><span>→</span></div>
-      <div class="param" data-id="form"><span>FORM</span><button class="step" data-dir="-1">←</button><output id="formVal"></output><button class="step" data-dir="1">→</button></div>
-      <div class="param" data-id="window"><span>WINDOW</span><button class="step" data-dir="-1">←</button><output id="windowVal"></output><button class="step" data-dir="1">→</button></div>
-      <div class="param" data-id="res"><span>RESONANCE</span><button class="step" data-dir="-1">←</button><output id="resVal"></output><button class="step" data-dir="1">→</button></div>
-      <canvas id="matScope"></canvas>
-    </div>
-  </section>
-
-  <div class="chain"><span>MATERIALIZER → RESULT</span></div>
-
-  <div class="module">
-    <div class="title"><span>RESULT</span><span>Σ</span></div>
-    <div class="param" data-id="level"><span>LEVEL</span><button class="step" data-dir="-1">←</button><output id="levelVal"></output><button class="step" data-dir="1">→</button></div>
-    <canvas id="outScope"></canvas>
-  </div>
-
-  <div class="smallrow">
-    <div class="module">
-      <div class="title"><span>ENV</span><span>∧</span></div>
-      <div class="param" data-id="envRate"><span>RATE</span><button class="step" data-dir="-1">←</button><output id="envRateVal"></output><button class="step" data-dir="1">→</button></div>
-      <canvas id="envScope"></canvas>
-    </div>
-    <div class="module">
-      <div class="title"><span>LFO</span><span>~</span></div>
-      <div class="param" data-id="lfoRate"><span>RATE</span><button class="step" data-dir="-1">←</button><output id="lfoRateVal"></output><button class="step" data-dir="1">→</button></div>
-      <canvas id="lfoScope"></canvas>
-    </div>
-  </div>
-
-  <div class="module">
-    <div class="title"><span>SWITCH MATRIX</span><span>×</span></div>
-    <div class="matrix" id="matrix">
-      <div></div><div class="mh">FORM</div><div class="mh">WINDOW</div><div class="mh">RESONANCE</div>
-      <div class="mh">ENV</div><button class="cell" data-route="env:form"></button><button class="cell on" data-route="env:window"></button><button class="cell" data-route="env:res"></button>
-      <div class="mh">LFO</div><button class="cell on" data-route="lfo:form"></button><button class="cell" data-route="lfo:window"></button><button class="cell" data-route="lfo:res"></button>
-    </div>
-  </div>
-
-  <div class="module">
-    <div class="title"><span>I/O</span><span>○</span></div>
-    <div class="jacks"><div class="jack">PHASE OUT</div><div class="jack">RESULT OUT</div><div class="jack">ENV OUT</div><div class="jack">GATE OUT</div></div>
-  </div>
-</main>
-<script>
-const $=id=>document.getElementById(id);
-const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
-const wrap=x=>((x%1)+1)%1;
-const lerp=(a,b,t)=>a+(b-a)*t;
-const P={
- freq:{v:.42,min:0,max:1,step:.006},reset:{v:0,min:0,max:1,step:.02},
- form:{v:.18,min:0,max:1,step:.02},window:{v:.72,min:0,max:1,step:.02},res:{v:.34,min:0,max:1,step:.02},
- level:{v:.42,min:0,max:.8,step:.02},envRate:{v:1.25,min:.05,max:8,step:.05},lfoRate:{v:.28,min:.02,max:12,step:.04}
-};
+</style></head><body><main>
+<header class="top"><span>ISLAND SEMI</span><button id="power">START</button></header>
+<section class="core">
+<div class="module"><div class="title"><span>PHASE</span><span>φ</span></div>
+<div class="param" data-id="freq"><span>FREQ</span><button class="step" data-dir="-1">←</button><output id="freqVal"></output><button class="step" data-dir="1">→</button></div>
+<div class="param" data-id="reset"><span>RESET</span><button class="step" data-dir="-1">←</button><output id="resetVal"></output><button class="step" data-dir="1">→</button></div>
+<div class="phasebar"><i id="phaseCursor"></i></div><canvas id="phaseScope"></canvas></div>
+<div class="chain"><span>PHASE → MATERIALIZER</span></div>
+<div class="module"><div class="title"><span>MATERIALIZER</span><span>→</span></div>
+<div class="param" data-id="form"><span>FORM</span><button class="step" data-dir="-1">←</button><output id="formVal"></output><button class="step" data-dir="1">→</button></div>
+<div class="param" data-id="window"><span>WINDOW</span><button class="step" data-dir="-1">←</button><output id="windowVal"></output><button class="step" data-dir="1">→</button></div>
+<div class="param" data-id="res"><span>RESONANCE</span><button class="step" data-dir="-1">←</button><output id="resVal"></output><button class="step" data-dir="1">→</button></div>
+<canvas id="matScope"></canvas></div></section>
+<div class="chain"><span>MATERIALIZER → RESULT</span></div>
+<div class="module"><div class="title"><span>RESULT</span><span>Σ</span></div><div class="param" data-id="level"><span>LEVEL</span><button class="step" data-dir="-1">←</button><output id="levelVal"></output><button class="step" data-dir="1">→</button></div><canvas id="outScope"></canvas></div>
+<div class="smallrow">
+<div class="module"><div class="title"><span>ENV</span><span>∧</span></div><div class="param" data-id="envRate"><span>RATE</span><button class="step" data-dir="-1">←</button><output id="envRateVal"></output><button class="step" data-dir="1">→</button></div><canvas id="envScope"></canvas></div>
+<div class="module"><div class="title"><span>LFO</span><span>~</span></div><div class="param" data-id="lfoRate"><span>RATE</span><button class="step" data-dir="-1">←</button><output id="lfoRateVal"></output><button class="step" data-dir="1">→</button></div><canvas id="lfoScope"></canvas></div></div>
+<div class="module"><div class="title"><span>SWITCH MATRIX</span><span>×</span></div><div class="matrix" id="matrix">
+<div></div><div class="mh">FORM</div><div class="mh">WINDOW</div><div class="mh">RESONANCE</div>
+<div class="mh">ENV</div><button class="cell" data-route="env:form"></button><button class="cell on" data-route="env:window"></button><button class="cell" data-route="env:res"></button>
+<div class="mh">LFO</div><button class="cell on" data-route="lfo:form"></button><button class="cell" data-route="lfo:window"></button><button class="cell" data-route="lfo:res"></button></div></div>
+<div class="module"><div class="title"><span>I/O</span><span>○</span></div><div class="jacks"><div class="jack">PHASE OUT</div><div class="jack">RESULT OUT</div><div class="jack">ENV OUT</div><div class="jack">GATE OUT</div></div></div>
+</main><script>
+const $=id=>document.getElementById(id),clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),wrap=x=>((x%1)+1)%1,lerp=(a,b,t)=>a+(b-a)*t;
+const P={freq:{v:.42,min:0,max:1,step:.006},reset:{v:0,min:0,max:1,step:.02},form:{v:.18,min:0,max:1,step:.02},window:{v:.72,min:0,max:1,step:.02},res:{v:.34,min:0,max:1,step:.02},level:{v:.42,min:0,max:.8,step:.02},envRate:{v:1.25,min:.05,max:8,step:.05},lfoRate:{v:.28,min:.02,max:12,step:.04}};
 const routes={'env:form':false,'env:window':true,'env:res':false,'lfo:form':true,'lfo:window':false,'lfo:res':false};
 function hz(v){return 27.5*Math.pow(2,v*6)}
-function fmt(id,v){if(id==='freq')return hz(v).toFixed(1)+' Hz';if(id==='envRate'||id==='lfoRate')return v.toFixed(2)+' Hz';if(id==='res')return (1+v*15).toFixed(1)+'×';return v.toFixed(2)}
+function fmt(id,v){if(id==='freq')return hz(v).toFixed(1)+' Hz';if(id==='envRate'||id==='lfoRate')return v.toFixed(2)+' Hz';return v.toFixed(2)}
 function update(){Object.keys(P).forEach(id=>{const o=$(id+'Val');if(o)o.textContent=fmt(id,P[id].v)})}
 function nudge(id,dir,mult=1){const p=P[id];p.v=clamp(p.v+dir*p.step*mult,p.min,p.max);update()}
-document.querySelectorAll('.param').forEach(row=>{
- const id=row.dataset.id;row.querySelectorAll('.step').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();nudge(id,Number(b.dataset.dir))}));
- let sx=0,sy=0,last=0,active=false;
- row.addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON')return;sx=e.clientX;sy=e.clientY;last=e.clientX;active=true});
- row.addEventListener('pointermove',e=>{if(!active)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)){e.preventDefault();const d=e.clientX-last;if(Math.abs(d)>7){nudge(id,d>0?1:-1,Math.max(1,Math.floor(Math.abs(d)/14)));last=e.clientX}}});
- row.addEventListener('pointerup',()=>active=false);row.addEventListener('pointercancel',()=>active=false);
-});
-document.querySelectorAll('.cell').forEach(b=>{b.onclick=()=>{const k=b.dataset.route;routes[k]=!routes[k];b.classList.toggle('on',routes[k])}});
-update();
-
-let ctx,node,running=false,phase=0,envP=0,lfoP=0,tracePos=0;
-const N=384,tr={phase:new Float32Array(N),mat:new Float32Array(N),out:new Float32Array(N),env:new Float32Array(N),lfo:new Float32Array(N)};
+document.querySelectorAll('.param').forEach(row=>{const id=row.dataset.id;row.querySelectorAll('.step').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();nudge(id,Number(b.dataset.dir))}));let sx=0,sy=0,last=0,active=false;row.addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON')return;sx=e.clientX;sy=e.clientY;last=e.clientX;active=true});row.addEventListener('pointermove',e=>{if(!active)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)){e.preventDefault();const d=e.clientX-last;if(Math.abs(d)>7){nudge(id,d>0?1:-1,Math.max(1,Math.floor(Math.abs(d)/14)));last=e.clientX}}});row.addEventListener('pointerup',()=>active=false);row.addEventListener('pointercancel',()=>active=false)});
+document.querySelectorAll('.cell').forEach(b=>{b.onclick=()=>{const k=b.dataset.route;routes[k]=!routes[k];b.classList.toggle('on',routes[k])}});update();
+let ctx,node,running=false,phase=0,envP=0,lfoP=0,tracePos=0;const N=384,tr={phase:new Float32Array(N),mat:new Float32Array(N),out:new Float32Array(N),env:new Float32Array(N),lfo:new Float32Array(N)};
 function materialize(p,form,window,res){
  p=wrap(p);
- const sine=Math.sin(p*Math.PI*2),saw=p*2-1;
- const base=lerp(sine,saw,form);
- const cycles=1+res*15;
+ const base=lerp(Math.sin(p*Math.PI*2),p*2-1,form);
+ // WINDOW is the resonant frequency control: closing it raises the internal cycles.
+ const cycles=1+Math.pow(1-window,2)*31;
  const rp=wrap(p*cycles);
- const carrier=Math.sin(rp*Math.PI*2);
- const down=1-p;
- const hann=Math.sin(Math.PI*p);
- const winShape=lerp(down,hann,.35);
- const win=lerp(1,winShape,window);
- const resonant=carrier*win;
+ const resonator=Math.sin(rp*Math.PI*2);
+ // Window envelope follows the source phase; resonance only controls the amount/Q-like emphasis.
+ const edge=Math.sin(Math.PI*p); const winEnv=lerp(1,edge*edge,.82);
+ const resonant=resonator*winEnv;
  return lerp(base,resonant,res);
 }
-function process(e){
- const L=e.outputBuffer.getChannelData(0),R=e.outputBuffer.getChannelData(1),sr=ctx.sampleRate;
- for(let i=0;i<L.length;i++){
-  phase=wrap(phase+hz(P.freq.v)/sr);
-  if(P.reset.v>.98&&phase>.5)phase=0;
-  envP=wrap(envP+P.envRate.v/sr);const env=1-envP;
-  lfoP=wrap(lfoP+P.lfoRate.v/sr);const lfo=Math.sin(lfoP*Math.PI*2)*.5+.5;
-  let form=P.form.v,window=P.window.v,res=P.res.v;
-  if(routes['env:form'])form+= (env-.5)*.7;if(routes['env:window'])window+=(env-.5)*.8;if(routes['env:res'])res+=(env-.5)*.7;
-  if(routes['lfo:form'])form+=(lfo-.5)*.55;if(routes['lfo:window'])window+=(lfo-.5)*.65;if(routes['lfo:res'])res+=(lfo-.5)*.55;
-  form=clamp(form);window=clamp(window);res=clamp(res);
-  const m=materialize(phase,form,window,res);const y=m*P.level.v;L[i]=y;R[i]=y;
-  if((i&3)===0){const q=tracePos++%N;tr.phase[q]=phase*2-1;tr.mat[q]=m;tr.out[q]=y;tr.env[q]=env*2-1;tr.lfo[q]=lfo*2-1}
- }
-}
+function process(e){const L=e.outputBuffer.getChannelData(0),R=e.outputBuffer.getChannelData(1),sr=ctx.sampleRate;for(let i=0;i<L.length;i++){phase=wrap(phase+hz(P.freq.v)/sr);if(P.reset.v>.98&&phase>.5)phase=0;envP=wrap(envP+P.envRate.v/sr);const env=1-envP;lfoP=wrap(lfoP+P.lfoRate.v/sr);const lfo=Math.sin(lfoP*Math.PI*2)*.5+.5;let form=P.form.v,window=P.window.v,res=P.res.v;if(routes['env:form'])form+=(env-.5)*.7;if(routes['env:window'])window+=(env-.5)*.8;if(routes['env:res'])res+=(env-.5)*.7;if(routes['lfo:form'])form+=(lfo-.5)*.55;if(routes['lfo:window'])window+=(lfo-.5)*.65;if(routes['lfo:res'])res+=(lfo-.5)*.55;form=clamp(form);window=clamp(window);res=clamp(res);const m=materialize(phase,form,window,res),y=m*P.level.v;L[i]=y;R[i]=y;if((i&3)===0){const q=tracePos++%N;tr.phase[q]=phase*2-1;tr.mat[q]=m;tr.out[q]=y;tr.env[q]=env*2-1;tr.lfo[q]=lfo*2-1}}}
 function scope(id,data){const c=$(id),dpr=devicePixelRatio||1,w=Math.max(20,c.clientWidth),h=Math.max(20,c.clientHeight);if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr)}const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);x.strokeStyle='#bbb';x.lineWidth=1;x.beginPath();x.moveTo(0,h/2);x.lineTo(w,h/2);x.stroke();x.strokeStyle='#111';x.beginPath();for(let i=0;i<N;i++){const q=(tracePos+i)%N,px=i/(N-1)*w,py=h/2-data[q]*h*.42;i?x.lineTo(px,py):x.moveTo(px,py)}x.stroke()}
 function draw(){scope('phaseScope',tr.phase);scope('matScope',tr.mat);scope('outScope',tr.out);scope('envScope',tr.env);scope('lfoScope',tr.lfo);$('phaseCursor').style.left=(phase*100)+'%';requestAnimationFrame(draw)}draw();
 $('power').onclick=async()=>{if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();node=ctx.createScriptProcessor(256,0,2);node.onaudioprocess=process;node.connect(ctx.destination)}running=!running;if(running){await ctx.resume();$('power').textContent='STOP';$('power').classList.add('on')}else{await ctx.suspend();$('power').textContent='START';$('power').classList.remove('on')}};
-
 let lastTouchEnd=0;document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<300)e.preventDefault();lastTouchEnd=now},{passive:false});document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});document.addEventListener('contextmenu',e=>e.preventDefault());
-</script>
-</body>
-</html>
+</script></body></html>
