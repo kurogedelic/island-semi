@@ -2,199 +2,85 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#fff">
 <title>ISLAND SEMI</title>
 <style>
-:root{--fg:#111;--bg:#fff;--mid:#777;--line:#bbb;--unit:12px}
-*{box-sizing:border-box}
+:root{--fg:#111;--bg:#fff;--line:#aaa;--unit:12px}
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html{touch-action:manipulation;-webkit-text-size-adjust:100%;overscroll-behavior:none}
 html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Arial,"Helvetica Neue","Noto Sans JP",sans-serif;font-size:var(--unit);line-height:1.2}
+body{overflow-x:hidden}
 button,input{font:inherit;color:inherit}
-button{background:#fff;border:1px solid var(--fg);border-radius:0;padding:6px 8px;cursor:pointer}
+button{background:#fff;border:1px solid var(--fg);border-radius:0;padding:6px 8px;cursor:pointer;touch-action:manipulation}
 button.on{background:#111;color:#fff}
-main{width:min(1500px,100%);margin:0 auto;padding:12px}
+main{width:min(1500px,100%);margin:0 auto;padding:12px max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
 .top{height:42px;border:1px solid var(--fg);display:flex;align-items:center;justify-content:space-between;padding:8px 10px;margin-bottom:8px;font-weight:700;letter-spacing:.08em}
 .diagram{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1.15fr 1.15fr .9fr;gap:8px;align-items:stretch}
 .module{border:1px solid var(--fg);padding:8px;min-width:0;background:#fff}
 .module-title{height:24px;border-bottom:1px solid var(--fg);display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;font-weight:700;letter-spacing:.06em}
-.control{display:grid;grid-template-columns:58px 1fr 38px;gap:5px;align-items:center;min-height:26px}
-.control output{text-align:right;font-variant-numeric:tabular-nums}
-input[type=range]{appearance:none;-webkit-appearance:none;width:100%;height:14px;background:transparent;margin:0}
+.control{display:grid;grid-template-columns:58px 28px minmax(40px,1fr) 28px 48px;gap:4px;align-items:center;min-height:34px;touch-action:pan-y}
+.control output{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.step{padding:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center}
+input[type=range]{appearance:none;-webkit-appearance:none;width:100%;height:24px;background:transparent;margin:0;touch-action:none}
 input[type=range]::-webkit-slider-runnable-track{height:1px;background:#111}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;background:#fff;border:1px solid #111;border-radius:50%;margin-top:-5px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:#fff;border:1px solid #111;border-radius:50%;margin-top:-8px}
 input[type=range]::-moz-range-track{height:1px;background:#111}
-input[type=range]::-moz-range-thumb{width:11px;height:11px;background:#fff;border:1px solid #111;border-radius:50%}
-canvas{display:block;width:100%;height:44px;border:1px solid var(--line);margin-top:7px;background:#fff}
-.flow{height:17px;display:flex;align-items:center;justify-content:center;letter-spacing:.08em}
-.flow::before,.flow::after{content:"";height:1px;background:#111;flex:1}
-.flow span{padding:0 5px}
-.matrix{grid-column:1/-1;border:1px solid var(--fg);padding:8px;margin-top:0;overflow:auto}
-.matrix-head{height:25px;border-bottom:1px solid var(--fg);font-weight:700;letter-spacing:.06em;margin-bottom:7px;display:flex;align-items:flex-start;justify-content:space-between}
-.matrix-grid{display:grid;gap:3px;min-width:980px;align-items:center}
-.matrix-label{height:22px;display:flex;align-items:center;white-space:nowrap}
-.matrix-label.dest{justify-content:center;text-align:center}
-.cell{padding:0;width:100%;height:22px;border:1px solid var(--fg);background:#fff}
-.cell.on{background:#111}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#fff;border:1px solid #111;border-radius:50%}
+canvas{display:block;width:100%;height:44px;border:1px solid var(--line);margin-top:7px;background:#fff;touch-action:none}
+.flow{height:17px;display:flex;align-items:center;justify-content:center;letter-spacing:.08em;grid-column:1/-1}
+.flow::before,.flow::after{content:"";height:1px;background:#111;flex:1}.flow span{padding:0 5px;white-space:nowrap}
+.matrix{grid-column:1/-1;border:1px solid var(--fg);padding:8px;margin-top:0;overflow:hidden}
+.matrix-head{height:29px;border-bottom:1px solid var(--fg);font-weight:700;letter-spacing:.06em;margin-bottom:7px;display:flex;align-items:flex-start;justify-content:space-between}
+.matrix-grid{display:grid;grid-template-columns:94px repeat(10,minmax(72px,1fr));gap:3px;align-items:center;min-width:980px}
+.matrix-label{height:26px;display:flex;align-items:center;white-space:nowrap}.matrix-label.dest{justify-content:center;text-align:center}
+.cell{padding:0;width:100%;height:26px;border:1px solid var(--fg);background:#fff;touch-action:manipulation}.cell.on{background:#111}
 .mods{grid-column:1/4;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .monitor{grid-column:4/-1;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
-.small{min-height:118px}
-.switchrow{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
-.switchrow button{padding:5px 4px}
-.jacks{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
-.jack{height:26px;border:1px solid var(--fg);display:flex;align-items:center;justify-content:center;white-space:nowrap}
-.jack::before{content:"○";margin-right:5px}
-@media(max-width:900px){
- main{min-width:760px}
- body{overflow-x:auto}
- .diagram{grid-template-columns:repeat(7,1fr)}
-}
+.small{min-height:118px}.switchrow{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}.switchrow button{padding:7px 4px}
+.jacks{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}.jack{height:26px;border:1px solid var(--fg);display:flex;align-items:center;justify-content:center;white-space:nowrap}.jack::before{content:"○";margin-right:5px}
+@media(max-width:700px){main{padding:6px max(6px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left))}.top{height:40px;margin-bottom:6px}.diagram{grid-template-columns:1fr;gap:6px}.module,.matrix{grid-column:1!important}.flow{grid-column:1!important}.mods,.monitor{grid-column:1!important;display:grid;grid-template-columns:1fr;gap:6px}.control{grid-template-columns:64px 32px minmax(0,1fr) 32px 52px;min-height:38px;gap:4px}.step{width:32px;height:32px;padding:0}input[type=range]{height:30px}input[type=range]::-webkit-slider-thumb{width:20px;height:20px;margin-top:-10px}input[type=range]::-moz-range-thumb{width:20px;height:20px}canvas{height:52px}.matrix{overflow:hidden;padding:6px}.matrix-head{height:31px}.matrix-grid{min-width:0;width:100%;grid-template-columns:48px repeat(10,minmax(0,1fr));gap:2px}.matrix-label{height:28px;overflow:hidden}.matrix-label.dest{height:64px;writing-mode:vertical-rl;transform:rotate(180deg);justify-content:flex-end;text-align:left;overflow:visible}.cell{height:28px;min-width:0}.small{min-height:0}}
 </style>
 </head>
 <body>
 <main>
-  <div class="top"><span>ISLAND SEMI</span><button id="power">START</button></div>
-  <section class="diagram">
-    <div class="module" id="phaseA">
-      <div class="module-title"><span>PHASE A</span><span>φ</span></div>
-      <label class="control"><span>FREQ</span><input id="freqA" type="range" min="0" max="1" step="0.001" value="0.43"><output id="freqAVal"></output></label>
-      <label class="control"><span>RESET</span><input id="resetA" type="range" min="0" max="1" step="0.001" value="0"><output id="resetAVal"></output></label>
-      <canvas id="scopePhaseA"></canvas>
-    </div>
-    <div class="module" id="phaseB">
-      <div class="module-title"><span>PHASE B</span><span>φ</span></div>
-      <label class="control"><span>FREQ</span><input id="freqB" type="range" min="0" max="1" step="0.001" value="0.50"><output id="freqBVal"></output></label>
-      <label class="control"><span>RESET</span><input id="resetB" type="range" min="0" max="1" step="0.001" value="0"><output id="resetBVal"></output></label>
-      <canvas id="scopePhaseB"></canvas>
-    </div>
-    <div class="module" id="opA">
-      <div class="module-title"><span>OP A</span><span>φ×</span></div>
-      <label class="control"><span>RATIO</span><input id="ratioA" type="range" min="0.25" max="8" step="0.01" value="1"><output id="ratioAVal"></output></label>
-      <label class="control"><span>OFFSET</span><input id="offsetA" type="range" min="-1" max="1" step="0.001" value="0"><output id="offsetAVal"></output></label>
-      <div class="switchrow"><button id="revA">REVERSE</button><button id="quantA">QUANT</button></div>
-      <canvas id="scopeOpA"></canvas>
-    </div>
-    <div class="module" id="opB">
-      <div class="module-title"><span>OP B</span><span>φ×</span></div>
-      <label class="control"><span>RATIO</span><input id="ratioB" type="range" min="0.25" max="8" step="0.01" value="1"><output id="ratioBVal"></output></label>
-      <label class="control"><span>OFFSET</span><input id="offsetB" type="range" min="-1" max="1" step="0.001" value="0"><output id="offsetBVal"></output></label>
-      <div class="switchrow"><button id="revB">REVERSE</button><button id="quantB">QUANT</button></div>
-      <canvas id="scopeOpB"></canvas>
-    </div>
-    <div class="module" id="matA">
-      <div class="module-title"><span>MATERIALIZER A</span><span>→</span></div>
-      <label class="control"><span>FORM</span><input id="formA" type="range" min="0" max="1" step="0.001" value="0.25"><output id="formAVal"></output></label>
-      <label class="control"><span>WINDOW</span><input id="windowA" type="range" min="0" max="1" step="0.001" value="0.10"><output id="windowAVal"></output></label>
-      <label class="control"><span>RESONANT</span><input id="resoA" type="range" min="0" max="1" step="0.001" value="0.10"><output id="resoAVal"></output></label>
-      <canvas id="scopeMatA"></canvas>
-    </div>
-    <div class="module" id="matB">
-      <div class="module-title"><span>MATERIALIZER B</span><span>→</span></div>
-      <label class="control"><span>FORM</span><input id="formB" type="range" min="0" max="1" step="0.001" value="0.68"><output id="formBVal"></output></label>
-      <label class="control"><span>WINDOW</span><input id="windowB" type="range" min="0" max="1" step="0.001" value="0.05"><output id="windowBVal"></output></label>
-      <label class="control"><span>RESONANT</span><input id="resoB" type="range" min="0" max="1" step="0.001" value="0.22"><output id="resoBVal"></output></label>
-      <canvas id="scopeMatB"></canvas>
-    </div>
-    <div class="module" id="out">
-      <div class="module-title"><span>OUT</span><span>Σ</span></div>
-      <label class="control"><span>A</span><input id="levelA" type="range" min="0" max="1" step="0.001" value="0.55"><output id="levelAVal"></output></label>
-      <label class="control"><span>B</span><input id="levelB" type="range" min="0" max="1" step="0.001" value="0.45"><output id="levelBVal"></output></label>
-      <label class="control"><span>MASTER</span><input id="master" type="range" min="0" max="1" step="0.001" value="0.45"><output id="masterVal"></output></label>
-      <canvas id="scopeOut"></canvas>
-    </div>
-
-    <div class="flow" style="grid-column:1/-1"><span>PHASE → OPERATOR → MATRIX → MATERIALIZER → RESULT</span></div>
-
-    <section class="matrix">
-      <div class="matrix-head"><span>SWITCH MATRIX</span><button id="clearMatrix">CLEAR</button></div>
-      <div id="matrixGrid" class="matrix-grid"></div>
-    </section>
-
-    <section class="mods">
-      <div class="module small">
-        <div class="module-title"><span>ENV</span><span>∧</span></div>
-        <label class="control"><span>RATE</span><input id="envRate" type="range" min="0.05" max="8" step="0.01" value="1.6"><output id="envRateVal"></output></label>
-        <label class="control"><span>SHAPE</span><input id="envShape" type="range" min="0.1" max="6" step="0.01" value="1.5"><output id="envShapeVal"></output></label>
-        <canvas id="scopeEnv"></canvas>
-      </div>
-      <div class="module small">
-        <div class="module-title"><span>LFO</span><span>~</span></div>
-        <label class="control"><span>RATE</span><input id="lfoRate" type="range" min="0.02" max="20" step="0.01" value="0.32"><output id="lfoRateVal"></output></label>
-        <label class="control"><span>SHAPE</span><input id="lfoShape" type="range" min="0" max="1" step="0.001" value="0"><output id="lfoShapeVal"></output></label>
-        <canvas id="scopeLfo"></canvas>
-      </div>
-      <div class="module small">
-        <div class="module-title"><span>S&amp;H</span><span>⌁</span></div>
-        <label class="control"><span>RATE</span><input id="shRate" type="range" min="0.2" max="40" step="0.1" value="5"><output id="shRateVal"></output></label>
-        <label class="control"><span>SLEW</span><input id="shSlew" type="range" min="0" max="1" step="0.001" value="0.12"><output id="shSlewVal"></output></label>
-        <canvas id="scopeSh"></canvas>
-      </div>
-    </section>
-
-    <section class="monitor">
-      <div class="module small"><div class="module-title"><span>CV OUT 1</span><span>○</span></div><div class="jacks"><div class="jack">RAW PHASE</div><div class="jack">0–5V</div></div><canvas id="scopeCv1"></canvas></div>
-      <div class="module small"><div class="module-title"><span>CV OUT 2</span><span>○</span></div><div class="jacks"><div class="jack">PROC PHASE</div><div class="jack">0–5V</div></div><canvas id="scopeCv2"></canvas></div>
-      <div class="module small"><div class="module-title"><span>PWM OUT</span><span>○</span></div><div class="jacks"><div class="jack">ENV</div><div class="jack">MOD</div></div><canvas id="scopePwm"></canvas></div>
-      <div class="module small"><div class="module-title"><span>GATE OUT</span><span>○</span></div><div class="jacks"><div class="jack">CLOCK</div><div class="jack">COMP</div></div><canvas id="scopeGate"></canvas></div>
-    </section>
-  </section>
+<div class="top"><span>ISLAND SEMI</span><button id="power">START</button></div>
+<section class="diagram">
+<div class="module" id="phaseA"><div class="module-title"><span>PHASE A</span><span>φ</span></div><label class="control"><span>FREQ</span><input id="freqA" type="range" min="0" max="1" step="0.001" value="0.43"><output id="freqAVal"></output></label><label class="control"><span>RESET</span><input id="resetA" type="range" min="0" max="1" step="0.001" value="0"><output id="resetAVal"></output></label><canvas id="scopePhaseA"></canvas></div>
+<div class="module" id="phaseB"><div class="module-title"><span>PHASE B</span><span>φ</span></div><label class="control"><span>FREQ</span><input id="freqB" type="range" min="0" max="1" step="0.001" value="0.50"><output id="freqBVal"></output></label><label class="control"><span>RESET</span><input id="resetB" type="range" min="0" max="1" step="0.001" value="0"><output id="resetBVal"></output></label><canvas id="scopePhaseB"></canvas></div>
+<div class="module" id="opA"><div class="module-title"><span>OP A</span><span>φ×</span></div><label class="control"><span>RATIO</span><input id="ratioA" type="range" min="0.25" max="8" step="0.01" value="1"><output id="ratioAVal"></output></label><label class="control"><span>OFFSET</span><input id="offsetA" type="range" min="-1" max="1" step="0.001" value="0"><output id="offsetAVal"></output></label><div class="switchrow"><button id="revA">REVERSE</button><button id="quantA">QUANT</button></div><canvas id="scopeOpA"></canvas></div>
+<div class="module" id="opB"><div class="module-title"><span>OP B</span><span>φ×</span></div><label class="control"><span>RATIO</span><input id="ratioB" type="range" min="0.25" max="8" step="0.01" value="1"><output id="ratioBVal"></output></label><label class="control"><span>OFFSET</span><input id="offsetB" type="range" min="-1" max="1" step="0.001" value="0"><output id="offsetBVal"></output></label><div class="switchrow"><button id="revB">REVERSE</button><button id="quantB">QUANT</button></div><canvas id="scopeOpB"></canvas></div>
+<div class="module" id="matA"><div class="module-title"><span>MATERIALIZER A</span><span>→</span></div><label class="control"><span>FORM</span><input id="formA" type="range" min="0" max="1" step="0.001" value="0.25"><output id="formAVal"></output></label><label class="control"><span>WINDOW</span><input id="windowA" type="range" min="0" max="1" step="0.001" value="0.10"><output id="windowAVal"></output></label><label class="control"><span>RESONANT</span><input id="resoA" type="range" min="0" max="1" step="0.001" value="0.10"><output id="resoAVal"></output></label><canvas id="scopeMatA"></canvas></div>
+<div class="module" id="matB"><div class="module-title"><span>MATERIALIZER B</span><span>→</span></div><label class="control"><span>FORM</span><input id="formB" type="range" min="0" max="1" step="0.001" value="0.68"><output id="formBVal"></output></label><label class="control"><span>WINDOW</span><input id="windowB" type="range" min="0" max="1" step="0.001" value="0.05"><output id="windowBVal"></output></label><label class="control"><span>RESONANT</span><input id="resoB" type="range" min="0" max="1" step="0.001" value="0.22"><output id="resoBVal"></output></label><canvas id="scopeMatB"></canvas></div>
+<div class="module" id="out"><div class="module-title"><span>OUT</span><span>Σ</span></div><label class="control"><span>A</span><input id="levelA" type="range" min="0" max="1" step="0.001" value="0.55"><output id="levelAVal"></output></label><label class="control"><span>B</span><input id="levelB" type="range" min="0" max="1" step="0.001" value="0.45"><output id="levelBVal"></output></label><label class="control"><span>MASTER</span><input id="master" type="range" min="0" max="1" step="0.001" value="0.45"><output id="masterVal"></output></label><canvas id="scopeOut"></canvas></div>
+<div class="flow"><span>φ → OP → MATRIX → MAT → OUT</span></div>
+<section class="matrix"><div class="matrix-head"><span>SWITCH MATRIX</span><button id="clearMatrix">CLEAR</button></div><div id="matrixGrid" class="matrix-grid"></div></section>
+<section class="mods"><div class="module small"><div class="module-title"><span>ENV</span><span>∧</span></div><label class="control"><span>RATE</span><input id="envRate" type="range" min="0.05" max="8" step="0.01" value="1.6"><output id="envRateVal"></output></label><label class="control"><span>SHAPE</span><input id="envShape" type="range" min="0.1" max="6" step="0.01" value="1.5"><output id="envShapeVal"></output></label><canvas id="scopeEnv"></canvas></div><div class="module small"><div class="module-title"><span>LFO</span><span>~</span></div><label class="control"><span>RATE</span><input id="lfoRate" type="range" min="0.02" max="20" step="0.01" value="0.32"><output id="lfoRateVal"></output></label><label class="control"><span>SHAPE</span><input id="lfoShape" type="range" min="0" max="1" step="0.001" value="0"><output id="lfoShapeVal"></output></label><canvas id="scopeLfo"></canvas></div><div class="module small"><div class="module-title"><span>S&amp;H</span><span>⌁</span></div><label class="control"><span>RATE</span><input id="shRate" type="range" min="0.2" max="40" step="0.1" value="5"><output id="shRateVal"></output></label><label class="control"><span>SLEW</span><input id="shSlew" type="range" min="0" max="1" step="0.001" value="0.12"><output id="shSlewVal"></output></label><canvas id="scopeSh"></canvas></div></section>
+<section class="monitor"><div class="module small"><div class="module-title"><span>CV OUT 1</span><span>○</span></div><div class="jacks"><div class="jack">RAW PHASE</div><div class="jack">0–5V</div></div><canvas id="scopeCv1"></canvas></div><div class="module small"><div class="module-title"><span>CV OUT 2</span><span>○</span></div><div class="jacks"><div class="jack">PROC PHASE</div><div class="jack">0–5V</div></div><canvas id="scopeCv2"></canvas></div><div class="module small"><div class="module-title"><span>PWM OUT</span><span>○</span></div><div class="jacks"><div class="jack">ENV</div><div class="jack">MOD</div></div><canvas id="scopePwm"></canvas></div><div class="module small"><div class="module-title"><span>GATE OUT</span><span>○</span></div><div class="jacks"><div class="jack">CLOCK</div><div class="jack">COMP</div></div><canvas id="scopeGate"></canvas></div></section>
+</section>
 </main>
 <script>
-const $=id=>document.getElementById(id);
-const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
-const wrap=x=>((x%1)+1)%1;
-const lerp=(a,b,t)=>a+(b-a)*t;
-const sources=['PH A','PH B','OP A','OP B','ENV','LFO','S&H'];
-const dests=['OP A','OP B','MAT A φ','MAT B φ','A FORM','A WINDOW','A RES','B FORM','B WINDOW','B RES'];
-const matrix={};
-const key=(s,d)=>s+'>'+d;
+const $=id=>document.getElementById(id),clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),wrap=x=>((x%1)+1)%1,lerp=(a,b,t)=>a+(b-a)*t;
+const sources=['PH A','PH B','OP A','OP B','ENV','LFO','S&H'],dests=['OP A','OP B','MAT A φ','MAT B φ','A FORM','A WINDOW','A RES','B FORM','B WINDOW','B RES'],matrix={},key=(s,d)=>s+'>'+d;
 function setRoute(s,d,on){matrix[key(s,d)]=!!on;const b=document.querySelector(`[data-key="${CSS.escape(key(s,d))}"]`);if(b)b.classList.toggle('on',!!on)}
-function buildMatrix(){
- const g=$('matrixGrid');g.style.gridTemplateColumns=`94px repeat(${dests.length},minmax(72px,1fr))`;
- g.append(document.createElement('div'));
- dests.forEach(d=>{const x=document.createElement('div');x.className='matrix-label dest';x.textContent=d;g.append(x)});
- sources.forEach(s=>{const l=document.createElement('div');l.className='matrix-label';l.textContent=s;g.append(l);dests.forEach(d=>{const b=document.createElement('button');b.className='cell';b.dataset.key=key(s,d);b.setAttribute('aria-label',key(s,d));b.onclick=()=>setRoute(s,d,!matrix[key(s,d)]);g.append(b)})});
- [['PH A','OP A'],['PH B','OP B'],['OP A','MAT A φ'],['OP B','MAT B φ'],['ENV','A WINDOW'],['ENV','B RES'],['LFO','A FORM']].forEach(r=>setRoute(r[0],r[1],true));
-}
-buildMatrix();
-$('clearMatrix').onclick=()=>{Object.keys(matrix).forEach(k=>matrix[k]=false);document.querySelectorAll('.cell').forEach(b=>b.classList.remove('on'))};
-const toggles={revA:false,revB:false,quantA:false,quantB:false};
-['revA','revB','quantA','quantB'].forEach(id=>{$(id).onclick=()=>{toggles[id]=!toggles[id];$(id).classList.toggle('on',toggles[id])}});
+function buildMatrix(){const g=$('matrixGrid');g.replaceChildren();g.append(document.createElement('div'));dests.forEach(d=>{const x=document.createElement('div');x.className='matrix-label dest';x.textContent=d;g.append(x)});sources.forEach(s=>{const l=document.createElement('div');l.className='matrix-label';l.textContent=s;g.append(l);dests.forEach(d=>{const b=document.createElement('button');b.className='cell';b.dataset.key=key(s,d);b.setAttribute('aria-label',key(s,d));b.onclick=()=>setRoute(s,d,!matrix[key(s,d)]);g.append(b)})});[['PH A','OP A'],['PH B','OP B'],['OP A','MAT A φ'],['OP B','MAT B φ'],['ENV','A WINDOW'],['ENV','B RES'],['LFO','A FORM']].forEach(r=>setRoute(r[0],r[1],true))}
+buildMatrix();$('clearMatrix').onclick=()=>{Object.keys(matrix).forEach(k=>matrix[k]=false);document.querySelectorAll('.cell').forEach(b=>b.classList.remove('on'))};
+const toggles={revA:false,revB:false,quantA:false,quantB:false};['revA','revB','quantA','quantB'].forEach(id=>{$(id).onclick=()=>{toggles[id]=!toggles[id];$(id).classList.toggle('on',toggles[id])}});
 const ids=['freqA','freqB','resetA','resetB','ratioA','ratioB','offsetA','offsetB','formA','formB','windowA','windowB','resoA','resoB','levelA','levelB','master','envRate','envShape','lfoRate','lfoShape','shRate','shSlew'];
-const formatters={freqA:v=>hzFromKnob(v).toFixed(1)+'Hz',freqB:v=>hzFromKnob(v).toFixed(1)+'Hz',resetA:v=>(v*100).toFixed(0)+'%',resetB:v=>(v*100).toFixed(0)+'%',ratioA:v=>Number(v).toFixed(2),ratioB:v=>Number(v).toFixed(2),offsetA:v=>Number(v).toFixed(2),offsetB:v=>Number(v).toFixed(2),envRate:v=>Number(v).toFixed(2)+'Hz',lfoRate:v=>Number(v).toFixed(2)+'Hz',shRate:v=>Number(v).toFixed(1)+'Hz'};
 function hzFromKnob(v){return 27.5*Math.pow(2,Number(v)*6)}
+const formatters={freqA:v=>hzFromKnob(v).toFixed(1)+'Hz',freqB:v=>hzFromKnob(v).toFixed(1)+'Hz',resetA:v=>(v*100).toFixed(0)+'%',resetB:v=>(v*100).toFixed(0)+'%',ratioA:v=>Number(v).toFixed(2),ratioB:v=>Number(v).toFixed(2),offsetA:v=>Number(v).toFixed(2),offsetB:v=>Number(v).toFixed(2),envRate:v=>Number(v).toFixed(2)+'Hz',lfoRate:v=>Number(v).toFixed(2)+'Hz',shRate:v=>Number(v).toFixed(1)+'Hz'};
 function updateLabels(){ids.forEach(id=>{const o=$(id+'Val');if(!o)return;const v=$(id).value;o.textContent=formatters[id]?formatters[id](v):Number(v).toFixed(2)})}
-ids.forEach(id=>$(id).addEventListener('input',updateLabels));updateLabels();
-let ctx,node,running=false;
-let phaseA=0,phaseB=0,lfoP=0,envP=0,shP=0,shTarget=0,shValue=0,prevOpA=0,prevOpB=0;
-const traces={};['PhaseA','PhaseB','OpA','OpB','MatA','MatB','Out','Env','Lfo','Sh','Cv1','Cv2','Pwm','Gate'].forEach(n=>traces[n]=new Float32Array(256));
-let tracePos=0;
-function param(id){return Number($(id).value)}
-function srcMap(pa,pb,oa,ob,env,lfo,sh){return {'PH A':pa,'PH B':pb,'OP A':oa,'OP B':ob,'ENV':env,'LFO':lfo,'S&H':sh}}
-function routed(src,dest){let x=0,n=0;sources.forEach(s=>{if(matrix[key(s,dest)]){x+=src[s];n++}});return n?x/n:0}
-function operator(input,ratio,offset,reverse,quant){let r=ratio;if(quant){const ratios=[.25,.333,.5,.667,.75,1,1.25,1.333,1.5,2,3,4,6,8];r=ratios.reduce((a,b)=>Math.abs(b-r)<Math.abs(a-r)?b:a)}let p=wrap(input*r+offset);if(reverse)p=1-p;return p}
-function materialize(p,form,window,res){p=wrap(p);const width=1-window*.88;let q=(p-.5)/width+.5;q=clamp(q);const baseS=Math.sin(q*Math.PI*2);const baseSaw=q*2-1;const base=lerp(baseS,baseSaw,form);const repeats=1+res*14;const rq=wrap(q*repeats);const rr=lerp(Math.sin(rq*Math.PI*2),rq*2-1,form);const decay=1-q*.82;const resonant=rr*decay;const winAmp=lerp(1,Math.pow(Math.sin(Math.PI*p),2),window*.75);return lerp(base,resonant,res)*winAmp}
-function process(e){
- const outL=e.outputBuffer.getChannelData(0),outR=e.outputBuffer.getChannelData(1),sr=ctx.sampleRate;
- for(let i=0;i<outL.length;i++){
-  phaseA=wrap(phaseA+hzFromKnob(param('freqA'))/sr);phaseB=wrap(phaseB+hzFromKnob(param('freqB'))/sr);
-  if(param('resetA')>.99&&phaseA>.5)phaseA=0;if(param('resetB')>.99&&phaseB>.5)phaseB=0;
-  envP=wrap(envP+param('envRate')/sr);const env=Math.pow(1-envP,param('envShape'));
-  lfoP=wrap(lfoP+param('lfoRate')/sr);const lfoS=Math.sin(lfoP*Math.PI*2)*.5+.5;const lfoT=1-Math.abs(lfoP*2-1);const lfo=lerp(lfoS,lfoT,param('lfoShape'));
-  shP+=param('shRate')/sr;if(shP>=1){shP-=1;shTarget=Math.random()}const slew=1-Math.pow(.0005,1/(sr*(.005+param('shSlew')*.4)));shValue+= (shTarget-shValue)*slew;
-  let src=srcMap(phaseA,phaseB,prevOpA,prevOpB,env,lfo,shValue);
-  const inOpA=routed(src,'OP A'),inOpB=routed(src,'OP B');
-  const oa=operator(inOpA,param('ratioA'),param('offsetA'),toggles.revA,toggles.quantA);const ob=operator(inOpB,param('ratioB'),param('offsetB'),toggles.revB,toggles.quantB);prevOpA=oa;prevOpB=ob;
-  src=srcMap(phaseA,phaseB,oa,ob,env,lfo,shValue);
-  const pa=wrap(routed(src,'MAT A φ')),pb=wrap(routed(src,'MAT B φ'));
-  const fa=clamp(param('formA')+(routed(src,'A FORM')-.5)*.9);const wa=clamp(param('windowA')+(routed(src,'A WINDOW')-.5)*.9);const ra=clamp(param('resoA')+(routed(src,'A RES')-.5)*.9);
-  const fb=clamp(param('formB')+(routed(src,'B FORM')-.5)*.9);const wb=clamp(param('windowB')+(routed(src,'B WINDOW')-.5)*.9);const rb=clamp(param('resoB')+(routed(src,'B RES')-.5)*.9);
-  const ma=materialize(pa,fa,wa,ra),mb=materialize(pb,fb,wb,rb);const mix=(ma*param('levelA')+mb*param('levelB'))*param('master');
-  outL[i]=mix;outR[i]=mix;
-  if((i&3)===0){const p=tracePos++&255;traces.PhaseA[p]=phaseA*2-1;traces.PhaseB[p]=phaseB*2-1;traces.OpA[p]=oa*2-1;traces.OpB[p]=ob*2-1;traces.MatA[p]=ma;traces.MatB[p]=mb;traces.Out[p]=mix;traces.Env[p]=env*2-1;traces.Lfo[p]=lfo*2-1;traces.Sh[p]=shValue*2-1;traces.Cv1[p]=phaseA*2-1;traces.Cv2[p]=oa*2-1;traces.Pwm[p]=env*2-1;traces.Gate[p]=phaseA<.5?-1:1}
- }
-}
-function drawScope(id,data){const c=$(id),dpr=devicePixelRatio||1,w=Math.max(20,c.clientWidth),h=Math.max(20,c.clientHeight);if(c.width!==w*dpr||c.height!==h*dpr){c.width=w*dpr;c.height=h*dpr}const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);x.strokeStyle='#bbb';x.lineWidth=1;x.beginPath();x.moveTo(0,h/2);x.lineTo(w,h/2);x.stroke();x.strokeStyle='#111';x.beginPath();for(let i=0;i<data.length;i++){const idx=(tracePos+i)&255;const px=i/(data.length-1)*w,py=h/2-data[idx]*h*.42;i?x.lineTo(px,py):x.moveTo(px,py)}x.stroke()}
-function draw(){drawScope('scopePhaseA',traces.PhaseA);drawScope('scopePhaseB',traces.PhaseB);drawScope('scopeOpA',traces.OpA);drawScope('scopeOpB',traces.OpB);drawScope('scopeMatA',traces.MatA);drawScope('scopeMatB',traces.MatB);drawScope('scopeOut',traces.Out);drawScope('scopeEnv',traces.Env);drawScope('scopeLfo',traces.Lfo);drawScope('scopeSh',traces.Sh);drawScope('scopeCv1',traces.Cv1);drawScope('scopeCv2',traces.Cv2);drawScope('scopePwm',traces.Pwm);drawScope('scopeGate',traces.Gate);requestAnimationFrame(draw)}draw();
+function nudge(input,dir){const min=Number(input.min||0),max=Number(input.max||1),nativeStep=Number(input.step||0.001),coarse=Math.max(nativeStep,(max-min)/100);input.value=clamp(Number(input.value)+dir*coarse,min,max);input.dispatchEvent(new Event('input',{bubbles:true}))}
+function installTouchControls(){document.querySelectorAll('.control').forEach(row=>{const input=row.querySelector('input[type=range]');if(!input)return;const left=document.createElement('button'),right=document.createElement('button');left.type=right.type='button';left.className=right.className='step';left.textContent='←';right.textContent='→';left.setAttribute('aria-label','decrease');right.setAttribute('aria-label','increase');row.insertBefore(left,input);input.after(right);left.onclick=()=>nudge(input,-1);right.onclick=()=>nudge(input,1);let active=false,startX=0,startY=0,startV=0,horizontal=false;row.addEventListener('pointerdown',e=>{if(e.target===left||e.target===right||e.target===input)return;active=true;horizontal=false;startX=e.clientX;startY=e.clientY;startV=Number(input.value);row.setPointerCapture?.(e.pointerId)});row.addEventListener('pointermove',e=>{if(!active)return;const dx=e.clientX-startX,dy=e.clientY-startY;if(!horizontal&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)*1.15)horizontal=true;if(!horizontal)return;const min=Number(input.min||0),max=Number(input.max||1),range=max-min;input.value=clamp(startV+dx/Math.max(120,row.clientWidth)*range,min,max);input.dispatchEvent(new Event('input',{bubbles:true}));e.preventDefault()},{passive:false});const end=()=>{active=false;horizontal=false};row.addEventListener('pointerup',end);row.addEventListener('pointercancel',end)});}
+installTouchControls();ids.forEach(id=>$(id).addEventListener('input',updateLabels));updateLabels();
+document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('dragstart',e=>e.preventDefault());document.addEventListener('selectstart',e=>e.preventDefault());document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});document.addEventListener('gestureend',e=>e.preventDefault(),{passive:false});
+let ctx,node,running=false,phaseA=0,phaseB=0,lfoP=0,envP=0,shP=0,shTarget=0,shValue=0,prevOpA=0,prevOpB=0;const traces={};['PhaseA','PhaseB','OpA','OpB','MatA','MatB','Out','Env','Lfo','Sh','Cv1','Cv2','Pwm','Gate'].forEach(n=>traces[n]=new Float32Array(256));let tracePos=0;
+function param(id){return Number($(id).value)}function srcMap(pa,pb,oa,ob,env,lfo,sh){return {'PH A':pa,'PH B':pb,'OP A':oa,'OP B':ob,'ENV':env,'LFO':lfo,'S&H':sh}}function routed(src,dest){let x=0,n=0;sources.forEach(s=>{if(matrix[key(s,dest)]){x+=src[s];n++}});return n?x/n:0}
+function operator(input,ratio,offset,reverse,quant){let r=ratio;if(quant){const rs=[.25,.333,.5,.667,.75,1,1.25,1.333,1.5,2,3,4,6,8];r=rs.reduce((a,b)=>Math.abs(b-r)<Math.abs(a-r)?b:a)}let p=wrap(input*r+offset);if(reverse)p=1-p;return p}
+function materialize(p,form,window,res){p=wrap(p);const width=1-window*.88;let q=clamp((p-.5)/width+.5);const base=lerp(Math.sin(q*Math.PI*2),q*2-1,form),rq=wrap(q*(1+res*14)),rr=lerp(Math.sin(rq*Math.PI*2),rq*2-1,form),resonant=rr*(1-q*.82),winAmp=lerp(1,Math.pow(Math.sin(Math.PI*p),2),window*.75);return lerp(base,resonant,res)*winAmp}
+function process(e){const outL=e.outputBuffer.getChannelData(0),outR=e.outputBuffer.getChannelData(1),sr=ctx.sampleRate;for(let i=0;i<outL.length;i++){phaseA=wrap(phaseA+hzFromKnob(param('freqA'))/sr);phaseB=wrap(phaseB+hzFromKnob(param('freqB'))/sr);if(param('resetA')>.99&&phaseA>.5)phaseA=0;if(param('resetB')>.99&&phaseB>.5)phaseB=0;envP=wrap(envP+param('envRate')/sr);const env=Math.pow(1-envP,param('envShape'));lfoP=wrap(lfoP+param('lfoRate')/sr);const lfo=lerp(Math.sin(lfoP*Math.PI*2)*.5+.5,1-Math.abs(lfoP*2-1),param('lfoShape'));shP+=param('shRate')/sr;if(shP>=1){shP-=1;shTarget=Math.random()}const slew=1-Math.pow(.0005,1/(sr*(.005+param('shSlew')*.4)));shValue+=(shTarget-shValue)*slew;let src=srcMap(phaseA,phaseB,prevOpA,prevOpB,env,lfo,shValue);const oa=operator(routed(src,'OP A'),param('ratioA'),param('offsetA'),toggles.revA,toggles.quantA),ob=operator(routed(src,'OP B'),param('ratioB'),param('offsetB'),toggles.revB,toggles.quantB);prevOpA=oa;prevOpB=ob;src=srcMap(phaseA,phaseB,oa,ob,env,lfo,shValue);const pa=wrap(routed(src,'MAT A φ')),pb=wrap(routed(src,'MAT B φ')),fa=clamp(param('formA')+(routed(src,'A FORM')-.5)*.9),wa=clamp(param('windowA')+(routed(src,'A WINDOW')-.5)*.9),ra=clamp(param('resoA')+(routed(src,'A RES')-.5)*.9),fb=clamp(param('formB')+(routed(src,'B FORM')-.5)*.9),wb=clamp(param('windowB')+(routed(src,'B WINDOW')-.5)*.9),rb=clamp(param('resoB')+(routed(src,'B RES')-.5)*.9),ma=materialize(pa,fa,wa,ra),mb=materialize(pb,fb,wb,rb),mix=(ma*param('levelA')+mb*param('levelB'))*param('master');outL[i]=mix;outR[i]=mix;if((i&3)===0){const p=tracePos++&255;traces.PhaseA[p]=phaseA*2-1;traces.PhaseB[p]=phaseB*2-1;traces.OpA[p]=oa*2-1;traces.OpB[p]=ob*2-1;traces.MatA[p]=ma;traces.MatB[p]=mb;traces.Out[p]=mix;traces.Env[p]=env*2-1;traces.Lfo[p]=lfo*2-1;traces.Sh[p]=shValue*2-1;traces.Cv1[p]=phaseA*2-1;traces.Cv2[p]=oa*2-1;traces.Pwm[p]=env*2-1;traces.Gate[p]=phaseA<.5?-1:1}}}
+function drawScope(id,data){const c=$(id),dpr=devicePixelRatio||1,w=Math.max(20,c.clientWidth),h=Math.max(20,c.clientHeight);if(c.width!==w*dpr||c.height!==h*dpr){c.width=w*dpr;c.height=h*dpr}const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);x.strokeStyle='#aaa';x.lineWidth=1;x.beginPath();x.moveTo(0,h/2);x.lineTo(w,h/2);x.stroke();x.strokeStyle='#111';x.beginPath();for(let i=0;i<data.length;i++){const idx=(tracePos+i)&255,px=i/(data.length-1)*w,py=h/2-data[idx]*h*.42;i?x.lineTo(px,py):x.moveTo(px,py)}x.stroke()}
+function draw(){[['scopePhaseA','PhaseA'],['scopePhaseB','PhaseB'],['scopeOpA','OpA'],['scopeOpB','OpB'],['scopeMatA','MatA'],['scopeMatB','MatB'],['scopeOut','Out'],['scopeEnv','Env'],['scopeLfo','Lfo'],['scopeSh','Sh'],['scopeCv1','Cv1'],['scopeCv2','Cv2'],['scopePwm','Pwm'],['scopeGate','Gate']].forEach(([id,n])=>drawScope(id,traces[n]));requestAnimationFrame(draw)}draw();
 $('power').onclick=async()=>{if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();node=ctx.createScriptProcessor(256,0,2);node.onaudioprocess=process;node.connect(ctx.destination)}if(ctx.state==='suspended')await ctx.resume();running=!running;if(running){await ctx.resume();$('power').textContent='STOP';$('power').classList.add('on')}else{await ctx.suspend();$('power').textContent='START';$('power').classList.remove('on')}};
 </script>
 </body>
